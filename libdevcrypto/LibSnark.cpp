@@ -76,6 +76,7 @@ libff::alt_bn128_Fq decodeFqElement(dev::bytesConstRef _data)
 	// h256::AlignLeft ensures that the h256 is zero-filled on the right if _data
 	// is too short.
 	h256 xbin(_data, h256::AlignLeft);
+	// TODO: Consider using a compiler time constant for comparison.
 	if (u256(xbin) >= u256(fromLibsnarkBigint(libff::alt_bn128_Fq::mod)))
 		BOOST_THROW_EXCEPTION(InvalidEncoding());
 	return toLibsnarkBigint(xbin);

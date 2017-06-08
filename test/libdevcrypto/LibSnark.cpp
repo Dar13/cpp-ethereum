@@ -89,6 +89,27 @@ BOOST_AUTO_TEST_CASE(ecadd)
 	BOOST_CHECK(result.second == expectation);
 }
 
+BOOST_AUTO_TEST_CASE(fieldPointInvalid)
+{
+	u256 const pMod{"21888242871839275222246405745257275088696311157297823662689037894645226208583"};
+
+	bytes input = toBigEndian(pMod);
+	BOOST_CHECK(!alt_bn128_G1_add(ref(input)).first);
+	BOOST_CHECK(!alt_bn128_G1_mul(ref(input)).first);
+
+	input = toBigEndian(pMod + 1);
+	BOOST_CHECK(!alt_bn128_G1_add(ref(input)).first);
+	BOOST_CHECK(!alt_bn128_G1_mul(ref(input)).first);
+
+	input = bytes(32, 0) + toBigEndian(pMod);
+	BOOST_CHECK(!alt_bn128_G1_add(ref(input)).first);
+	BOOST_CHECK(!alt_bn128_G1_mul(ref(input)).first);
+
+	input = bytes(32, 0) + toBigEndian(pMod + 1);
+	BOOST_CHECK(!alt_bn128_G1_add(ref(input)).first);
+	BOOST_CHECK(!alt_bn128_G1_mul(ref(input)).first);
+}
+
 BOOST_AUTO_TEST_CASE(invalid)
 {
 	bytes x =
