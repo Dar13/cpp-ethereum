@@ -324,6 +324,20 @@ BOOST_AUTO_TEST_CASE(pairing)
 	BOOST_REQUIRE(ret.second == toBigEndian(u256(0)));
 }
 
+BOOST_AUTO_TEST_CASE(pairingNullInput)
+{
+	// TODO: Maybe the empty input should also be considered invalid?
+	auto r = pairingprod_helper({});
+	BOOST_CHECK(r.first);
+
+	r = pairingprod_helper(bytes(2 * 32 + 2 * 64, 0));
+	BOOST_CHECK(r.first);
+
+	// Invalid length of input.
+	r = pairingprod_helper(bytes(2 * 32 + 2 * 64 + 1, 0));
+	BOOST_CHECK(!r.first);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 }

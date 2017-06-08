@@ -53,9 +53,9 @@ libff::bigint<libff::alt_bn128_q_limbs> toLibsnarkBigint(h256 const& _x)
 	auto const N = b.N;
 	constexpr size_t L = sizeof(b.data[0]);
 	static_assert(sizeof(mp_limb_t) == L, "Unexpected limb size in libff::bigint.");
-	for (unsigned i = 0; i < N; i++)
-		for (unsigned j = 0; j < L; j++)
-			b.data[N - 1 - i] |= (mp_limb_t)(_x[i * L + j]) << (8 * (L - 1 - j));
+	for (size_t i = 0; i < N; i++)
+		for (size_t j = 0; j < L; j++)
+			b.data[N - 1 - i] |= mp_limb_t(_x[i * L + j]) << (8 * (L - 1 - j));
 	return b;
 }
 
@@ -65,9 +65,9 @@ h256 fromLibsnarkBigint(libff::bigint<libff::alt_bn128_q_limbs> const& _b)
 	constexpr size_t L = sizeof(_b.data[0]);
 	static_assert(sizeof(mp_limb_t) == L, "Unexpected limb size in libff::bigint.");
 	h256 x;
-	for (unsigned i = 0; i < N; i++)
-		for (unsigned j = 0; j < L; j++)
-			x[i * L + j] = uint8_t((mp_limb_t)(_b.data[N - 1 - i]) >> (8 * (L - 1 - j)));
+	for (size_t i = 0; i < N; i++)
+		for (size_t j = 0; j < L; j++)
+			x[i * L + j] = uint8_t(_b.data[N - 1 - i] >> (8 * (L - 1 - j)));
 	return x;
 }
 
@@ -113,7 +113,6 @@ libff::alt_bn128_Fq2 decodeFq2Element(dev::bytesConstRef _data)
 		decodeFqElement(_data.cropped(0))
 	);
 }
-
 
 libff::alt_bn128_G2 decodePointG2(dev::bytesConstRef _data)
 {
